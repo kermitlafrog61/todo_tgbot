@@ -65,9 +65,9 @@ def answer_to_update(msg: types.Message):
     def get_title(msg, id_, todo):
         title = msg.text if msg.text != 'None' else todo['title']
         bot.send_message(msg.chat.id, 'Выполнена ли задача?')
-        bot.register_next_step_handler(msg, final, id_, todo, title)
+        bot.register_next_step_handler(msg, final, id_, title)
 
-    def final(msg, id_, todo, title):
+    def final(msg, id_, title):
         is_done = msg.text
         HOST.update_todo(id_, Todo(title, is_done))
         bot.send_message(msg.chat.id, 'Успех')

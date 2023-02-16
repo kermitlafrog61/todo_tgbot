@@ -22,7 +22,7 @@ class Request:
         if responce.status_code == 200:
             return json.loads(responce.text)
         elif responce.status_code == 404:
-            raise 0
+            return 0
         raise Exception('Непредвиденная ошибка')
 
     def delete_todo(self, id_: int):
@@ -38,6 +38,5 @@ class Request:
         if responce.status_code == 200:
             return
         elif responce.status_code == 404:
-            raise 0
-        print(responce.status_code)
-        # raise Exception('Непредвиденная ошибка')
+            return 0
+        raise Exception('Непредвиденная ошибка')
