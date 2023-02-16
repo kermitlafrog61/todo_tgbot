@@ -10,8 +10,8 @@ class Interface(Request):
         self.url = url
 
 
-url = 'http://3.67.196.232/'
-token = '6139829813:AAH88pbBZSxyfm0_LxgFIEUthjkNnIn1ujo'
+url = 'url'
+token = 'token'
 HOST = Interface(url)
 
 bot = telebot.TeleBot(token)
