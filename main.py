@@ -48,11 +48,11 @@ def starting_message(msg: types.Message):
 def answer_to_create(msg: types.Message):
     bot.send_message(msg.chat.id, 'Введите название задачи')
 
-    def creating(msg: types.Message):
+    def final(msg: types.Message):
         HOST.create_todo(Todo(msg.text))
         bot.send_message(msg.chat.id, 'Успех')
 
-    bot.register_next_step_handler(msg, creating)
+    bot.register_next_step_handler(msg, final)
         
 
 @bot.message_handler(func=lambda msg: msg.text == 'read')
@@ -63,51 +63,51 @@ def answer_to_read(msg: types.Message):
 def answer_to_update(msg: types.Message):
     bot.send_message(msg.chat.id, 'Введите id задачи')
     
-    def update_id(msg):
+    def get_id(msg):
         id_ = msg.text
         todo = HOST.retrieve_todo(id_)
         if todo:
             bot.send_message(msg.chat.id, 'Введите новое название, либо None')
-            bot.register_next_step_handler(msg, update_title, id_, todo)
+            bot.register_next_step_handler(msg, get_title, id_, todo)
         else:
             bot.send_message(msg.chat.id, 'Нет такой задачи')
 
-    def update_title(msg, id_, todo):
+    def get_title(msg, id_, todo):
         title = msg.text if msg.text != 'None' else todo['title']
         bot.send_message(msg.chat.id, 'Выполнена ли задача?')
-        bot.register_next_step_handler(msg, updating, id_, todo, title)
+        bot.register_next_step_handler(msg, final, id_, todo, title)
 
-    def updating(msg, id_, todo, title):
+    def final(msg, id_, todo, title):
         is_done = msg.text
         HOST.update_todo(id_, Todo(title, is_done))
         bot.send_message(msg.chat.id, 'Успех')
 
-    bot.register_next_step_handler(msg, update_id)
+    bot.register_next_step_handler(msg, get_id)
 
 @bot.message_handler(func=lambda msg: msg.text == 'delete')
 def answer_to_delete(msg: types.Message):
     bot.send_message(msg.chat.id, 'Введите id задачи')
 
-    def deleting(msg):
+    def final(msg):
         todo = HOST.delete_todo(msg.text)
         if todo:
             bot.send_message(msg.chat.id, 'Успех!')
         else:
             bot.send_message(msg.chat.id, 'Нет такой задачи')
 
-    bot.register_next_step_handler(msg, deleting)
+    bot.register_next_step_handler(msg, final)
 
 @bot.message_handler(func=lambda msg: msg.text == 'retrieve')
 def answer_to_create(msg: types.Message):
     bot.send_message(msg.chat.id, 'Введите id задачи')
 
-    def retieving(msg):
+    def final(msg):
             todo = HOST.retrieve_todo(msg.text)
             if todo:
                 bot.send_message(msg.chat.id, json.dumps(todo, indent=4))
             else:
                 bot.send_message(msg.chat.id, 'Нет такой задачи')
 
-    bot.register_next_step_handler(msg, retieving)
+    bot.register_next_step_handler(msg, final)
     
 bot.polling()
